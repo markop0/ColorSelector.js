@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="UTF-8">
-		<title>ColorSelector</title>
-		<style type="text/css">
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>ColorSelector</title>
+	<style type="text/css">
 blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,li,ol,p,pre,td,textarea,th,ul{margin:0;padding:0}body,button,input,select,textarea{font:12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif}h1,h2,h3,h4,h5,h6{font-size:100%}address,cite,dfn,em,var{font-style:normal}code,kbd,pre,samp{font-family:courier new,courier,monospace}small{font-size:12px}ol,ul{list-style:none}a{text-decoration:none}a:hover{text-decoration:underline}sup{vertical-align:text-top}sub{vertical-align:text-bottom}legend{color:#000}fieldset,img{border:0}button,input,select,textarea{font-size:100%}button{border-radius:0}table{border-collapse:collapse;border-spacing:0}
 .wcs{
 	display: flex;
@@ -68,7 +70,7 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
 		</style>
 	</head>
 	<body>
-		<div class="wcs">
+		<div class="wcs" onmousedown="mousePosition(event)" onmousemove="mouseMove(event)">
 			<div class="windC">
 				<div class="mbox"></div><!--遮罩层-->
 				<div class="zbox"></div><!--主层-->
@@ -86,11 +88,35 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
 	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 	<script type="text/javascript">
 function getDivPosition(div){
-    var x = div.getBoundingClientRect().left;
-    var y = div.getBoundingClientRect().top;
+    var x = Math.ceil(div.getBoundingClientRect().left);
+    var y = Math.ceil(div.getBoundingClientRect().top);
     return {x:x,y:y};
 }
+function mousePosition(ev){
+    x=event.clientX
+	y=event.clientY
+//	let pxo ={x:x,y:y}
+	let px ={x:x-p0.x,y:y-p0.y}//px相对坐标
+	if(pm.x>=x&&x>=p0.x&&y>=p0.y&&y<=pm.y){
+//		alert(px)
+		$('.zzm').css({"top":px.y+"px","left":px.x+"px"})
+	}
+};
+//document.onmousemove = mouseMove;
+function mouseMove(ev){
+	x=event.clientX
+	y=event.clientY
+//	let pxo ={x:x,y:y}
+	px ={x:x-p0.x,y:y-p0.y}//px相对坐标
+	if(pm.x>=x&&x>=p0.x&&y>=p0.y&&y<=pm.y){
+//		alert(px)
+		$('.zzm').css({"top":px.y+"px","left":px.x+"px"})
+	}
+}
+ 
+ 
 let p0 = getDivPosition($('.windC')[0])
+let pm = {x:p0.x+280,y:p0.y+180}
 console.log(p0)
 	</script>
 </html>
