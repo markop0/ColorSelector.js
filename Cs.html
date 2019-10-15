@@ -9,10 +9,9 @@
 blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,li,ol,p,pre,td,textarea,th,ul{margin:0;padding:0}body,button,input,select,textarea{font:12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif}h1,h2,h3,h4,h5,h6{font-size:100%}address,cite,dfn,em,var{font-style:normal}code,kbd,pre,samp{font-family:courier new,courier,monospace}small{font-size:12px}ol,ul{list-style:none}a{text-decoration:none}a:hover{text-decoration:underline}sup{vertical-align:text-top}sub{vertical-align:text-bottom}legend{color:#000}fieldset,img{border:0}button,input,select,textarea{font-size:100%}button{border-radius:0}table{border-collapse:collapse;border-spacing:0}
 .wcs{
 	display: flex;
-	padding: 30px;
-	width: 100vw;
+	margin: 30px 0 0 30px;
 }
-.windC{
+.windP{
 	position: relative;
     width: 280px;
     height: 180px;
@@ -32,6 +31,7 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
 }
 .zzm{
 	position: absolute;
+	cursor: pointer;
 	top: 50px;
 	left: 100px;
 }
@@ -43,7 +43,7 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
     transform: translate(-2px, -2px);
 }
 
-.allColor{
+.windC{
 	position: relative;
 	padding-left: 10px;
 }
@@ -70,15 +70,15 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
 		</style>
 	</head>
 	<body>
-		<div class="wcs" onmousedown="mousePosition(event)" onmousemove="mouseMove(event)">
-			<div class="windC">
+		<div class="wcs">  <!--onmousemove="mouseMove(event)"-->
+			<div class="windP" onmousedown="mousePosition(event)">
 				<div class="mbox"></div><!--遮罩层-->
 				<div class="zbox"></div><!--主层-->
 				<div class="zzm">
 					<div class="zzRound"></div>
 				</div><!--选择指针-->
 			</div>
-			<div class="allColor">
+			<div class="windC" onmousedown="selectColor(event)">
 				<div class="lbox"></div><!--主层-->
 				<div class="lset"></div><!--选择指针-->
 			</div>
@@ -95,28 +95,53 @@ function getDivPosition(div){
 function mousePosition(ev){
     x=event.clientX
 	y=event.clientY
-//	let pxo ={x:x,y:y}
 	let px ={x:x-p0.x,y:y-p0.y}//px相对坐标
 	if(pm.x>=x&&x>=p0.x&&y>=p0.y&&y<=pm.y){
-//		alert(px)
 		$('.zzm').css({"top":px.y+"px","left":px.x+"px"})
 	}
+	document.onmousemove = mouseMove; 			// 注册鼠标移动事件处理函数
+    document.onmouseup = mouseStop;
 };
-//document.onmousemove = mouseMove;
 function mouseMove(ev){
 	x=event.clientX
 	y=event.clientY
-//	let pxo ={x:x,y:y}
-	px ={x:x-p0.x,y:y-p0.y}//px相对坐标
-	if(pm.x>=x&&x>=p0.x&&y>=p0.y&&y<=pm.y){
-//		alert(px)
-		$('.zzm').css({"top":px.y+"px","left":px.x+"px"})
-	}
+	px ={
+		x:x<p0.x?0:x>pm.x?280:x-p0.x,
+		y:y<p0.y?0:y>pm.y?180:y-p0.y
+	}//px相对坐标
+	$('.zzm').css({"top":px.y+"px","left":px.x+"px"})
+
 }
+function mouseStop(ev){
+	o = document.onmousemove = document.onmouseup = null; 
+}
+
+function selectColor(ev){
+	x=event.clientX
+    y=event.clientY
+	let cx ={y:y-c0.y}//colorX相对坐标
+	if(cm.x>=x&&x>=c0.x&&y>=c0.y&&y<=cm.y){
+		$('.lset').css({"top":cx.y+"px"})
+	}
+	document.onmousemove = selectColorMove; 			// 注册鼠标移动事件处理函数
+    document.onmouseup = selectColorStop;
+};
+function selectColorMove(ev){
+	y=event.clientY
+	cx ={
+		y:y<c0.y?0:y>cm.y?180:y-c0.y
+	}//px相对坐标
+	$('.lset').css({"top":cx.y+"px"})
+
+}
+function selectColorStop(ev){
+	o = document.onmousemove = document.onmouseup = null; 
+}  
  
- 
-let p0 = getDivPosition($('.windC')[0])
+let p0 = getDivPosition($('.windP')[0])
 let pm = {x:p0.x+280,y:p0.y+180}
+let c0 = getDivPosition($('.windC')[0])
+let cm = {x:c0.x+30,y:c0.y+180}
 console.log(p0)
 	</script>
 </html>
