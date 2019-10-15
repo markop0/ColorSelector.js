@@ -7,9 +7,31 @@
 	<title>ColorSelector</title>
 	<style type="text/css">
 blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,li,ol,p,pre,td,textarea,th,ul{margin:0;padding:0}body,button,input,select,textarea{font:12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif}h1,h2,h3,h4,h5,h6{font-size:100%}address,cite,dfn,em,var{font-style:normal}code,kbd,pre,samp{font-family:courier new,courier,monospace}small{font-size:12px}ol,ul{list-style:none}a{text-decoration:none}a:hover{text-decoration:underline}sup{vertical-align:text-top}sub{vertical-align:text-bottom}legend{color:#000}fieldset,img{border:0}button,input,select,textarea{font-size:100%}button{border-radius:0}table{border-collapse:collapse;border-spacing:0}
+.databox{display: flex;}
+.ncBox{width: 30px;height: 30px;border-radius: 4px;margin: 30px 0 0 30px;border: 1px #cccccc solid;background-image: url(tmbg.png);}
+.nowColor{width: 30px;height: 30px;border-radius: 4px;}
+.colorData{
+	margin: 30px 0 0 20px;
+}
+.colorData input{
+	-webkit-appearance: none;
+	background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #DCDFE6;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 30px;
+    line-height: 30px;
+    outline: none;
+    transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    width: 44px;
+    text-align: center;
+}
 .wcs{
 	display: flex;
-	margin: 30px 0 0 30px;
+	margin: 20px 0 0 30px;
 }
 .windP{
 	position: relative;
@@ -45,7 +67,7 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
 
 .windC{
 	position: relative;
-	padding-left: 10px;
+	padding: 0 10px;
 }
 .lbox{
 	width: 30px;
@@ -53,11 +75,10 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
 	
 	background: linear-gradient(to bottom, red 0%, #ff0 17%, lime 33%, cyan 50%, blue 67%, #f0f 83%, red 100%);
 }
-.lset {
+.lset,.wAset {
     position: absolute;
     cursor: pointer;
     box-sizing: border-box;
-    left: 10px;
     top: 110px;
     width: 30px;
     height: 4px;
@@ -67,9 +88,32 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
     box-shadow: 0 0 2px rgba(0,0,0,0.6);
     z-index: 1;
 }
+.windA{
+	width: 30px;
+	height: 180px;
+	background-image: url(tmbg.png);
+	position: relative;
+}
+.wAbox{
+	width: 30px;
+	height: 180px;
+	background: linear-gradient(to bottom, hsla(0, 0%, 100%, 0) 0%, red 100%);
+}
+{
+	
+}
 		</style>
 	</head>
 	<body>
+		<div class="databox">
+			<div class="ncBox"><div class="nowColor"></div></div>
+			<div class="colorData">
+				H:<input type="text" name="" id="CH" value="0" />
+				S:<input type="text" name="" id="CS" value="28" />%
+				l:<input type="text" name="" id="CL" value="56" />%
+				A:<input type="text" name="" id="CA" value="1" />
+			</div>
+		</div>
 		<div class="wcs">  <!--onmousemove="mouseMove(event)"-->
 			<div class="windP" onmousedown="mousePosition(event)">
 				<div class="mbox"></div><!--遮罩层-->
@@ -82,6 +126,10 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
 				<div class="lbox"></div><!--主层-->
 				<div class="lset"></div><!--选择指针-->
 			</div>
+			<div class="windA" onmousedown="selectA(event)">
+				<div class="wAbox"></div><!--主层-->
+				<div class="wAset"></div><!--选择指针-->
+			</div>
 		</div>
 	
 	</body>
@@ -92,15 +140,23 @@ function getDivPosition(div){
     var y = Math.ceil(div.getBoundingClientRect().top);
     return {x:x,y:y};
 }
+//颜色选择
 function mousePosition(ev){
     x=event.clientX
 	y=event.clientY
 	let px ={x:x-p0.x,y:y-p0.y}//px相对坐标
-	if(pm.x>=x&&x>=p0.x&&y>=p0.y&&y<=pm.y){
+	if(event.button==0){
+		//	if(pm.x>=x&&x>=p0.x&&y>=p0.y&&y<=pm.y){
 		$('.zzm').css({"top":px.y+"px","left":px.x+"px"})
+		nowColor.s=Math.ceil(px.x/280*100)
+		nowColor.l=Math.ceil(Math.sqrt((pm.x-px.x)**2+(pm.y-px.y)**2)/Math.sqrt(pm.x**2+pm.y**2)*100)
+		changeNowC();
+		document.onmousemove = mouseMove; 			// 注册鼠标移动事件处理函数
+    	document.onmouseup = mouseStop;
+	//	}
 	}
-	document.onmousemove = mouseMove; 			// 注册鼠标移动事件处理函数
-    document.onmouseup = mouseStop;
+
+	
 };
 function mouseMove(ev){
 	x=event.clientX
@@ -109,22 +165,28 @@ function mouseMove(ev){
 		x:x<p0.x?0:x>pm.x?280:x-p0.x,
 		y:y<p0.y?0:y>pm.y?180:y-p0.y
 	}//px相对坐标
+	nowColor.s=Math.ceil(px.x/280*100)
+	nowColor.l=Math.ceil(Math.sqrt((pm.x-px.x)**2+(pm.y-px.y)**2)/Math.sqrt(pm.x**2+pm.y**2)*100)
+	changeNowC();
 	$('.zzm').css({"top":px.y+"px","left":px.x+"px"})
 
 }
 function mouseStop(ev){
 	o = document.onmousemove = document.onmouseup = null; 
 }
-
+//色相选择
 function selectColor(ev){
 	x=event.clientX
     y=event.clientY
 	let cx ={y:y-c0.y}//colorX相对坐标
-	if(cm.x>=x&&x>=c0.x&&y>=c0.y&&y<=cm.y){
+	if(event.button==0){
 		$('.lset').css({"top":cx.y+"px"})
+		color.h=cx.y*2
+		nowColor.h=cx.y*2
+		changeC();
 	}
 	document.onmousemove = selectColorMove; 			// 注册鼠标移动事件处理函数
-    document.onmouseup = selectColorStop;
+    document.onmouseup = mouseStop;
 };
 function selectColorMove(ev){
 	y=event.clientY
@@ -132,16 +194,53 @@ function selectColorMove(ev){
 		y:y<c0.y?0:y>cm.y?180:y-c0.y
 	}//px相对坐标
 	$('.lset').css({"top":cx.y+"px"})
-
+	color.h=cx.y*2
+	nowColor.h=cx.y*2
+	changeC();
 }
-function selectColorStop(ev){
-	o = document.onmousemove = document.onmouseup = null; 
-}  
- 
+
+//透明度选择
+function selectA(ev){
+	x=event.clientX
+    y=event.clientY
+	let ax ={a:y-a0.y}//colorX相对坐标
+	if(event.button==0){
+		$('.wAset').css({"top":ax.a+"px"})
+		nowColor.a=Math.ceil(ax.a/180*100)/100
+		changeNowC();
+	}
+	document.onmousemove = selectAMove; 			// 注册鼠标移动事件处理函数
+    document.onmouseup = mouseStop;
+};
+function selectAMove(ev){
+	y=event.clientY
+	ax ={a:y<a0.y?0:y>am.y?180:y-a0.y}//cx相对坐标
+	$('.wAset').css({"top":ax.a+"px"})
+	nowColor.a=Math.ceil(ax.a/180*100)/100
+	changeNowC();
+}
+
+function changeC(){
+	$('.windP').css("background-color",`hsl(${color.h},${color.s}%,${color.l}%)`)
+	$('')
+	changeNowC();
+}
+function changeNowC() {
+	$('.nowColor').css("background-color",`hsla(${nowColor.h},${nowColor.s}%,${nowColor.l}%),${nowColor.a}`)
+	$('#CH').val(nowColor.h)
+	$('#CS').val(nowColor.s)
+	$('#CL').val(nowColor.l)
+	$('#CA').val(nowColor.a)
+}
 let p0 = getDivPosition($('.windP')[0])
 let pm = {x:p0.x+280,y:p0.y+180}
 let c0 = getDivPosition($('.windC')[0])
 let cm = {x:c0.x+30,y:c0.y+180}
+let a0 = getDivPosition($('.windA')[0])
+let am = {x:c0.x+30,y:c0.y+180}
+let color ={h:0,s:100,l:50}//色相
+let nowColor ={h:0,s:100,l:50,a:1}//所选颜色
+changeC();
 console.log(p0)
 	</script>
 </html>
