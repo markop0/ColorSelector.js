@@ -54,8 +54,8 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
 .zzm{
 	position: absolute;
 	cursor: pointer;
-	top: 50px;
-	left: 100px;
+	top: 180px;
+	left: 280px;
 }
 .zzRound{
 	width: 4px;
@@ -79,7 +79,7 @@ blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,
     position: absolute;
     cursor: pointer;
     box-sizing: border-box;
-    top: 110px;
+    top: 180px;
     width: 30px;
     height: 4px;
     border-radius: 1px;
@@ -148,8 +148,13 @@ function mousePosition(ev){
 	if(event.button==0){
 		//	if(pm.x>=x&&x>=p0.x&&y>=p0.y&&y<=pm.y){
 		$('.zzm').css({"top":px.y+"px","left":px.x+"px"})
-		nowColor.s=Math.ceil(px.x/280*100)
-		nowColor.l=Math.ceil(Math.sqrt((pm.x-px.x)**2+(pm.y-px.y)**2)/Math.sqrt(pm.x**2+pm.y**2)*100)
+		nowColor.s=px.y==0?100:px.y==pm.y?0:Math.ceil(px.x/280*100)
+		nowColor.l=Math.ceil(((Math.sqrt(((pm.x-x)**2)+((pm.y-y)**2)))/(Math.sqrt(((pm.x-p0.x)**2)+((pm.y-p0.y)**2))))*100)
+		
+//		let fz=Math.sqrt(((pm.x-x)**2)+((pm.y-y)**2))
+//		let fm=Math.sqrt(((pm.x-p0.x)**2)+((pm.y-p0.y)**2))
+		
+		
 		changeNowC();
 		document.onmousemove = mouseMove; 			// 注册鼠标移动事件处理函数
     	document.onmouseup = mouseStop;
@@ -165,8 +170,14 @@ function mouseMove(ev){
 		x:x<p0.x?0:x>pm.x?280:x-p0.x,
 		y:y<p0.y?0:y>pm.y?180:y-p0.y
 	}//px相对坐标
-	nowColor.s=Math.ceil(px.x/280*100)
-	nowColor.l=Math.ceil(Math.sqrt((pm.x-px.x)**2+(pm.y-px.y)**2)/Math.sqrt(pm.x**2+pm.y**2)*100)
+	nowColor.s=px.x==0&&px.y==0?0:px.y==0&&px.x!==0?100:px.y==pm.y-p0.y?0:Math.ceil(px.x/280*100)		//px.y==0?100:px.y==pm.y-p0.y?0:px.x==0&&px.y==0?0:Math.ceil(px.x/280*100)
+	nowColor.l=px.y==pm.y-p0.y?0:Math.ceil(((Math.sqrt(((pm.x-px.x-p0.x)**2)+((pm.y-px.y-p0.y)**2)))/(Math.sqrt(((pm.x-p0.x)**2)+((pm.y-p0.y)**2))))*100)
+	
+	let xx=pm.x-px.x-p0.x
+	let yy=pm.y-px.y-p0.y
+	let fz=Math.sqrt(((pm.x-px.x-p0.x)**2)+((pm.y-px.y-p0.y)**2))
+	let fm=Math.sqrt(((pm.x-p0.x)**2)+((pm.y-p0.y)**2))
+	
 	changeNowC();
 	$('.zzm').css({"top":px.y+"px","left":px.x+"px"})
 
@@ -198,7 +209,6 @@ function selectColorMove(ev){
 	nowColor.h=cx.y*2
 	changeC();
 }
-
 //透明度选择
 function selectA(ev){
 	x=event.clientX
@@ -219,12 +229,13 @@ function selectAMove(ev){
 	nowColor.a=Math.ceil(ax.a/180*100)/100
 	changeNowC();
 }
-
+//改变色相
 function changeC(){
 	$('.windP').css("background-color",`hsl(${color.h},${color.s}%,${color.l}%)`)
-	$('')
+	$('.wAbox').css("background",`linear-gradient(to bottom, hsla(0, 0%, 100%, 0) 0%, hsl(${color.h},${color.s}%,${color.l}%) 100%)`)
 	changeNowC();
 }
+//改变所选值
 function changeNowC() {
 	$('.nowColor').css("background-color",`hsla(${nowColor.h},${nowColor.s}%,${nowColor.l}%),${nowColor.a}`)
 	$('#CH').val(nowColor.h)
