@@ -131,13 +131,16 @@ function selectAMove(ev) {
 }
 //改变色相
 function changeC() {
+	nowColor.h=color.h
 	$('.windP').css("background", `hsl(${color.h},100%,50%)`)
 	$('.wAbox').css("background", `linear-gradient(to bottom, hsla(0, 0%, 100%, 0) 0%, hsl(${color.h},100%,50%) 100%)`)
 	changeNowC();
 }
 //改变所选值
 function changeNowC() {
-	let rgba = hsv2rgb(nowColor.h,nowColor.s/100,nowColor.b/100,nowColor.a)
+	console.log(nowColor)
+	let rgba = hsv2rgb(nowColor.s/100,nowColor.h,nowColor.b/100,nowColor.a)
+//	console.log(rgba)
 	$('.nowColor').css("background", `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`)
 	$('#CH').val(nowColor.h)
 	$('#CS').val(nowColor.s)
@@ -155,50 +158,41 @@ function changeNowC() {
 
 //HSB(V)转换为RGB，0<=H<1，0<=S,V<=1
 function hsv2rgb(S,H,V,A=1) {
-	
 	var R, G, B;
-	if(S == 0) {
-		R = G = B = V;
-	} else {
-		var _H = H * 6;
-		if(_H == 6) {
-			_H = 0;
-		}
-		var i = Math.floor(_H);
-		var v1 = V * (1 - S);
-		var v2 = V * (1 - S * (_H - i));
-		var v3 = V * (1 - S * (1 - (_H - i)));
-		if(i == 0) {
-			R = V;
-			G = v3;
-			B = v1;
-		} else if(i == 1) {
-			R = v2;
-			G = V;
-			B = v1;
-		} else if(i == 2) {
-			R = v1;
-			G = V;
-			B = v3;
-		} else if(i == 3) {
-			R = v1;
-			G = v2;
-			B = V;
-		} else if(i == 4) {
-			R = v3;
-			G = v1;
-			B = V;
-		} else {
-			R = V;
-			G = v1;
-			B = v2;
-		}
-	}
+//H, S and V input range = 0 ÷ 1.0
+//R, G and B output range = 0 ÷ 255
+
+if ( S == 0 )
+{
+   R = V * 255
+   G = V * 255
+   B = V * 255
+}
+else
+{
+   var_h = H * 6
+   if ( var_h == 6 ) var_h = 0      //H must be < 1
+   var_i = Math.floor( var_h )             //Or ... var_i = floor( var_h )
+   var_1 = V * ( 1 - S )
+   var_2 = V * ( 1 - S * ( var_h - var_i ) )
+   var_3 = V * ( 1 - S * ( 1 - ( var_h - var_i ) ) )
+
+   if      ( var_i == 0 ) { var_r = V     ; var_g = var_3 ; var_b = var_1 }
+   else if ( var_i == 1 ) { var_r = var_2 ; var_g = V     ; var_b = var_1 }
+   else if ( var_i == 2 ) { var_r = var_1 ; var_g = V     ; var_b = var_3 }
+   else if ( var_i == 3 ) { var_r = var_1 ; var_g = var_2 ; var_b = V     }
+   else if ( var_i == 4 ) { var_r = var_3 ; var_g = var_1 ; var_b = V     }
+   else                   { var_r = V     ; var_g = var_1 ; var_b = var_2 }
+
+   R = var_r 
+   G = var_g 
+   B = var_b 
+}
 	return {
 		r: Math.round(R * 255),
 		g: Math.round(G * 255),
 		b: Math.round(B * 255),
-		a:A
+		a: A
 	};
 }
 String.prototype.colorHex = function(){
@@ -262,6 +256,44 @@ function rgbToHsl(r, g, b) {
 
     return [h, s, l];
 }
+
+function rgbToHsv(r, g, b) {
+    r = r / 255;
+    g = g / 255;
+    b = b / 255;
+    var h, s, v;
+    var min = Math.min(r, g, b);
+    var max = v = Math.max(r, g, b);
+    var l = (min + max) / 2;
+    var difference = max - min;
+
+    if (max == min) {
+        h = 0;
+    } else {
+        switch (max) {
+        case r:
+            h = (g - b) / difference + (g < b ? 6 : 0);
+            break;
+        case g:
+            h = 2.0 + (b - r) / difference;
+            break;
+        case b:
+            h = 4.0 + (r - g) / difference;
+            break;
+        }
+        h = Math.round(h * 60);
+    }
+    if (max == 0) {
+        s = 0;
+    } else {
+        s = 1 - min / max;
+    }
+    s = Math.round(s * 100);
+    v = Math.round(v * 100);
+    return [h, s, v];
+}
+rgbToHsv(255,155,5)
+
 
 let p0 = getDivPosition($('.windP')[0])
 let pm = getDivMPosition($('.windP')[0])
