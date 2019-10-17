@@ -1,0 +1,122 @@
+blockquote,body,button,dd,dl,dt,fieldset,form,h1,h2,h3,h4,h5,h6,hr,input,legend,li,ol,p,pre,td,textarea,th,ul{margin:0;padding:0}body,button,input,select,textarea{font:12px/1.5 tahoma,arial,'Hiragino Sans GB','\5b8b\4f53',sans-serif}h1,h2,h3,h4,h5,h6{font-size:100%}address,cite,dfn,em,var{font-style:normal}code,kbd,pre,samp{font-family:courier new,courier,monospace}small{font-size:12px}ol,ul{list-style:none}a{text-decoration:none}a:hover{text-decoration:underline}sup{vertical-align:text-top}sub{vertical-align:text-bottom}legend{color:#000}fieldset,img{border:0}button,input,select,textarea{font-size:100%}button{border-radius:0}table{border-collapse:collapse;border-spacing:0}
+body{background: #f3f3f3;}
+.databox{display: flex;padding-top: 30px;flex-direction: column;}
+.ncBox{width: 30px;height: 30px;border-radius: 4px;margin: 0 0 0 30px;border: 1px #cccccc solid;background-image: url(tmbg.png);}
+.nowColor{width: 30px;height: 30px;border-radius: 4px;}
+.colorData,.hex{
+	margin: 0 0 0 20px;
+}
+
+input {
+    display: inline-block;
+    line-height: 1;
+    height: 30px;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #DCDFE6;
+    border-color: #DCDFE6;
+    color: #606266;
+    -webkit-appearance: none;
+    text-align: center;
+    box-sizing: border-box;
+    outline: none;
+    margin: 0;
+    transition: .1s;
+    font-weight: 500;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    font-size: 14px;
+    border-radius: 4px;
+    padding: 0 8px;
+}
+.colorData input:not(.hex){
+	-webkit-appearance: none;
+	background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #DCDFE6;
+    box-sizing: border-box;
+    color: #606266;
+    display: inline-block;
+    font-size: inherit;
+    height: 30px;
+    line-height: 30px;
+    outline: none;
+    transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+    width: 44px;
+    text-align: center;
+}
+.wcs{
+	display: flex;
+	margin: 20px 0 0 30px;
+}
+.windP{
+	position: relative;
+    width: 180px;
+    height: 180px;
+    background-color: #ff0000;
+}
+.mask-white{
+	width: 180px;
+	height: 180px;
+	position: absolute;
+	background: linear-gradient(to right, #fff, rgba(255,255,255,0));
+}
+.mask-black{
+	width: 180px;
+	height: 180px;
+	position: absolute;
+	background: linear-gradient(to top, #000, rgba(0,0,0,0));
+}
+.zzm{
+	position: absolute;
+	cursor: pointer;
+	top: 0px;
+	left: 180px;
+}
+.zzRound{
+	width: 8px;/*4*/
+    height: 8px;
+    box-shadow: 0 0 0 1.5px #fff, inset 0 0 1px 1px rgba(0,0,0,0.3), 0 0 1px 2px rgba(0,0,0,0.4);
+    border-radius: 50%;
+    transform: translate(-2px, -2px);
+}
+
+.windC{
+	position: relative;
+	padding: 0 10px;
+}
+.lbox{
+	width: 30px;
+	height: 180px;
+	
+	background: linear-gradient(to bottom, red 0%, #ff0 17%, lime 33%, cyan 50%, blue 67%, #f0f 83%, red 100%);
+}
+.lset,.wAset {
+    position: absolute;
+    cursor: pointer;
+    box-sizing: border-box;
+    top: 180px;
+    width: 30px;
+    height: 4px;
+    border-radius: 1px;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 0 2px rgba(0,0,0,0.6);
+    z-index: 1;
+}
+.windA{
+	width: 30px;
+	height: 180px;
+	background-image: url(tmbg.png);
+	position: relative;
+}
+.wAbox{
+	width: 30px;
+	height: 180px;
+	background: linear-gradient(to bottom, hsla(0, 0%, 100%, 0) 0%, red 100%);
+}
+{
+	
+}
