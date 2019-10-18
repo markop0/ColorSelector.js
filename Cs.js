@@ -119,17 +119,22 @@ function selectAMove(ev) {
 	nowColor.a = Math.ceil(ax.a / cbh * 100) / 100
 	changeNowC();
 }
-//改变色相
+//改变透明度的色相和主色卡的色相
 function changeC() {
 	nowColor.h = color.h
 	$('.windP').css("background", `hsl(${color.h},100%,50%)`)
-	$('.wAbox').css("background", `linear-gradient(to bottom, hsla(0, 0%, 100%, 0) 0%, hsl(${color.h},100%,50%) 100%)`)
+	$('.wAbox').css("background", `linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, hsl(${color.h},100%,50%) 100%)`)
 	changeNowC();
+}
+//改变透明度色相
+function aChangeA(rgba){
+	$('.wAbox').css("background", `linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgb(${rgba.r},${rgba.g},${rgba.b}) 100%)`)
 }
 //改变所选值
 function changeNowC() {
 	let rgba = hsb2rgb(nowColor.h, nowColor.s / 100, nowColor.b / 100, nowColor.a)
 	$('.nowColor').css("background", `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`)
+	aChangeA(rgba)
 	$('#CH').val(nowColor.h)
 	$('#CS').val(nowColor.s)
 	$('#CB').val(nowColor.b)
@@ -143,7 +148,7 @@ function changeNowC() {
 	$('#CHEX').val(HEX)
 }
 
-//HSB(V)转RGB，for   参考https://github.com/jankuca/hsb2rgb
+//HSB(V)转RGB，   公式参考https://github.com/jankuca/hsb2rgb
 function hsb2rgb(hue, saturation, value, A) {
 	hue = (parseInt(hue, 10) || 0) % 360;
 
@@ -207,7 +212,7 @@ function hsb2rgb(hue, saturation, value, A) {
 		a: A
 	};
 }
-//rgb转hex
+//rgb转hex  公式参考https://www.zhangxinxu.com/wordpress/2010/03/javascript-hex-rgb-hsl-color-convert/
 String.prototype.colorHex = function() {
 	var that = this;
 	//十六进制颜色值的正则表达式
@@ -271,7 +276,7 @@ function rgbToHsl(r, g, b) {
 
 	return [h, s, l];
 }
-//rbg转shv
+//rbg转shv(b)参考同zhangxinxu
 function rgbToHsv(r, g, b) {
 	r = r / 255;
 	g = g / 255;
