@@ -1,52 +1,89 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="Cs.css"/>
-	<title>ColorSelector</title>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" type="text/css" href="Cs.css" />
+		<title>ColorSelector</title>
 	</head>
+
 	<body>
 		<div class="databox">
-			<div class="ncBox"><div class="nowColor"></div></div>
-			<div class="colorData">
-				HSLA:
-				H:<input type="text" name="" id="CH" value="0" />&nbsp;
-				S:<input type="text" name="" id="CS" value="28" />%
-				B:<input type="text" name="" id="CB" value="56" />%
-				A:<input type="text" name="" class="CA" value="1" />
+			<div class="ncBox">
+				<div class="nowColor"></div>
 			</div>
 			<div class="colorData">
-				RGBA:
-				R:<input type="text" name="" id="CR" value="0" />
-				G:<input type="text" name="" id="CG" value="28" />&nbsp;&nbsp;&nbsp;
-				B:<input type="text" name="" id="CBb" value="56" />&nbsp;&nbsp;&nbsp;
-				A:<input type="text" name="" class="CA" value="1" />
+				HSLA: H:
+				<input type="text" name="" id="CH" value="0" />&nbsp; S:
+				<input type="text" name="" id="CS" value="28" />% B:
+				<input type="text" name="" id="CB" value="56" />% A:
+				<input type="text" name="" class="CA" value="1" />
+			</div>
+			<div class="colorData">
+				RGBA: R:
+				<input type="text" name="" id="CR" value="0" /> G:
+				<input type="text" name="" id="CG" value="28" />&nbsp;&nbsp;&nbsp; B:
+				<input type="text" name="" id="CBb" value="56" />&nbsp;&nbsp;&nbsp; A:
+				<input type="text" name="" class="CA" value="1" />
 			</div>
 			<div class="hex">
 				HEX:<input type="text" name="" id="CHEX" value="#ff1a1a" />
 			</div>
 		</div>
-		<div class="wcs">  <!--onmousemove="mouseMove(event)"-->
-			<div class="windP" onmousedown="mousePosition(event)" >
-				<div class="mask-white"></div><!--白遮罩层-->
-				<div class="mask-black"></div><!--黑遮罩层-->
+		<div class="wcs">
+			<!--onmousemove="mouseMove(event)"-->
+			<div class="windP" onmousedown="mousePosition(event)">
+				<div class="mask-white"></div>
+				<!--白遮罩层-->
+				<div class="mask-black"></div>
+				<!--黑遮罩层-->
 				<div class="zzm">
 					<div class="zzRound"></div>
-				</div><!--选择指针-->
+				</div>
+				<!--选择指针-->
 			</div>
 			<div class="windC" onmousedown="selectColor(event)">
-				<div class="lbox"></div><!--主层-->
-				<div class="lset"></div><!--选择指针-->
+				<div class="lbox"></div>
+				<!--主层-->
+				<div class="lset"></div>
+				<!--选择指针-->
 			</div>
 			<div class="windA" onmousedown="selectA(event)">
-				<div class="wAbox"></div><!--主层-->
-				<div class="wAset"></div><!--选择指针-->
+				<div class="wAbox"></div>
+				<!--主层-->
+				<div class="wAset"></div>
+				<!--选择指针-->
 			</div>
 		</div>
-	
+
 	</body>
 	<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 	<script src="Cs.js" type="text/javascript" charset="utf-8"></script>
+	<!--<script src="hsb2rgb.js" type="text/javascript" charset="utf-8"></script>-->
+	<script type="text/javascript">
+		let p0 = getDivPosition($('.windP')[0])
+		let pm = getDivMPosition($('.windP')[0])
+		let c0 = getDivPosition($('.windC')[0])
+		let cm = getDivMPosition($('.windC')[0])
+		let a0 = getDivPosition($('.windA')[0])
+		let am = getDivMPosition($('.windA')[0])
+		let color = {
+			h: 0,
+			s: 100,
+			b: 100
+		} //当前色相
+		let nowColor = {
+			h: 0,
+			s: 100,
+			b: 100,
+			a: 1
+		} //所选颜色
+		let cbw = pm.x - p0.x //colorBoxWith 色块长度
+		let cbh = pm.y - p0.y //colorBoxHeight 色块高度
+		changeC();
+		console.log(p0)
+	</script>
+
 </html>

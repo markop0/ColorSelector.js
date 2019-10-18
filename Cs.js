@@ -1,8 +1,3 @@
-// Number  h       色相
-// Number  s       饱和度
-// Number  b       明度
-// Array           RGB色值数值
-
 function getDivPosition(div) {
 	var x = Math.ceil(div.getBoundingClientRect().left);
 	var y = Math.ceil(div.getBoundingClientRect().top);
@@ -29,7 +24,6 @@ function mousePosition(ev) {
 		y: y - p0.y
 	} //px相对坐标
 	if(event.button == 0) {
-		//	if(pm.x>=x&&x>=p0.x&&y>=p0.y&&y<=pm.y){
 		$('.zzm').css({
 			"top": px.y + "px",
 			"left": px.x + "px"
@@ -37,13 +31,9 @@ function mousePosition(ev) {
 		nowColor.s = px.x == 0 ? 0 : px.x == cbw ? 100 : Math.ceil(px.x / cbw * 100)
 		nowColor.b = px.y == 0 ? 100 : px.y == cbh ? 0 : Math.ceil((cbh - px.y) / cbh * 100)
 
-		//		let fz=Math.sqrt(((pm.x-x)**2)+((pm.y-y)**2))
-		//		let fm=Math.sqrt(((pm.x-p0.x)**2)+((pm.y-p0.y)**2))
-
 		changeNowC();
 		document.onmousemove = mouseMove; // 注册鼠标移动事件处理函数
 		document.onmouseup = mouseStop;
-		//	}
 	}
 
 };
@@ -131,22 +121,20 @@ function selectAMove(ev) {
 }
 //改变色相
 function changeC() {
-	nowColor.h=color.h
+	nowColor.h = color.h
 	$('.windP').css("background", `hsl(${color.h},100%,50%)`)
 	$('.wAbox').css("background", `linear-gradient(to bottom, hsla(0, 0%, 100%, 0) 0%, hsl(${color.h},100%,50%) 100%)`)
 	changeNowC();
 }
 //改变所选值
 function changeNowC() {
-	console.log(nowColor)
-	let rgba = hsv2rgb(nowColor.s/100,nowColor.h,nowColor.b/100,nowColor.a)
-//	console.log(rgba)
+	let rgba = hsb2rgb(nowColor.h, nowColor.s / 100, nowColor.b / 100, nowColor.a)
 	$('.nowColor').css("background", `rgba(${rgba.r},${rgba.g},${rgba.b},${rgba.a})`)
 	$('#CH').val(nowColor.h)
 	$('#CS').val(nowColor.s)
 	$('#CB').val(nowColor.b)
 	$('.CA').val(nowColor.a)
-	
+
 	$('#CR').val(rgba.r)
 	$('#CG').val(rgba.g)
 	$('#CBb').val(rgba.b)
@@ -155,164 +143,205 @@ function changeNowC() {
 	$('#CHEX').val(HEX)
 }
 
+//HSB(V)转RGB，for   参考https://github.com/jankuca/hsb2rgb
+function hsb2rgb(hue, saturation, value, A) {
+	hue = (parseInt(hue, 10) || 0) % 360;
 
-//HSB(V)转换为RGB，0<=H<1，0<=S,V<=1
-function hsv2rgb(S,H,V,A=1) {
-	var R, G, B;
-//H, S and V input range = 0 ÷ 1.0
-//R, G and B output range = 0 ÷ 255
+	saturation = /%/.test(saturation) ?
+		parseInt(saturation, 10) / 100 :
+		parseFloat(saturation, 10);
 
-if ( S == 0 )
-{
-   R = V * 255
-   G = V * 255
-   B = V * 255
-}
-else
-{
-   var_h = H * 6
-   if ( var_h == 6 ) var_h = 0      //H must be < 1
-   var_i = Math.floor( var_h )             //Or ... var_i = floor( var_h )
-   var_1 = V * ( 1 - S )
-   var_2 = V * ( 1 - S * ( var_h - var_i ) )
-   var_3 = V * ( 1 - S * ( 1 - ( var_h - var_i ) ) )
+	value = /%/.test(value) ?
+		parseInt(value, 10) / 100 :
+		parseFloat(value, 10);
 
-   if      ( var_i == 0 ) { var_r = V     ; var_g = var_3 ; var_b = var_1 }
-   else if ( var_i == 1 ) { var_r = var_2 ; var_g = V     ; var_b = var_1 }
-   else if ( var_i == 2 ) { var_r = var_1 ; var_g = V     ; var_b = var_3 }
-   else if ( var_i == 3 ) { var_r = var_1 ; var_g = var_2 ; var_b = V     }
-   else if ( var_i == 4 ) { var_r = var_3 ; var_g = var_1 ; var_b = V     }
-   else                   { var_r = V     ; var_g = var_1 ; var_b = var_2 }
+	saturation = Math.max(0, Math.min(saturation, 1));
+	value = Math.max(0, Math.min(value, 1));
 
-   R = var_r 
-   G = var_g 
-   B = var_b 
-}
+	var rgb;
+	if(saturation === 0&&value===1) {
+		return {
+			r: 255,
+			g: 255,
+			b: 255,
+			a: A
+		};
+	}
+
+	var side = hue / 60;
+	var chroma = value * saturation;
+	var x = chroma * (1 - Math.abs(side % 2 - 1));
+	var match = value - chroma;
+
+	switch(Math.floor(side)) {
+		case 0:
+			rgb = [chroma, x, 0];
+			break;
+		case 1:
+			rgb = [x, chroma, 0];
+			break;
+		case 2:
+			rgb = [0, chroma, x];
+			break;
+		case 3:
+			rgb = [0, x, chroma];
+			break;
+		case 4:
+			rgb = [x, 0, chroma];
+			break;
+		case 5:
+			rgb = [chroma, 0, x];
+			break;
+		default:
+			rgb = [0, 0, 0];
+	}
+
+	rgb[0] = Math.round(255 * (rgb[0] + match));
+	rgb[1] = Math.round(255 * (rgb[1] + match));
+	rgb[2] = Math.round(255 * (rgb[2] + match));
+
 	return {
-		r: Math.round(R * 255),
-		g: Math.round(G * 255),
-		b: Math.round(B * 255),
+		r: rgb[0],
+		g: rgb[1],
+		b: rgb[2],
 		a: A
 	};
 }
-String.prototype.colorHex = function(){
-    var that = this;
-    //十六进制颜色值的正则表达式
-    var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
-    // 如果是rgb颜色表示
-    if (/^(rgb|RGB)/.test(that)) {
-        var aColor = that.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
-        var strHex = "#";
-        for (var i=0; i<aColor.length; i++) {
-            var hex = Number(aColor[i]).toString(16);
-            if (hex.length < 2) {
-                hex = '0' + hex;    
-            }
-            strHex += hex;
-        }
-        if (strHex.length !== 7) {
-            strHex = that;    
-        }
-        return strHex;
-    } else if (reg.test(that)) {
-        var aNum = that.replace(/#/,"").split("");
-        if (aNum.length === 6) {
-            return that;    
-        } else if(aNum.length === 3) {
-            var numHex = "#";
-            for (var i=0; i<aNum.length; i+=1) {
-                numHex += (aNum[i] + aNum[i]);
-            }
-            return numHex;
-        }
-    }
-    return that;
+//rgb转hex
+String.prototype.colorHex = function() {
+	var that = this;
+	//十六进制颜色值的正则表达式
+	var reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/;
+	// 如果是rgb颜色表示
+	if(/^(rgb|RGB)/.test(that)) {
+		var aColor = that.replace(/(?:\(|\)|rgb|RGB)*/g, "").split(",");
+		var strHex = "#";
+		for(var i = 0; i < aColor.length; i++) {
+			var hex = Number(aColor[i]).toString(16);
+			if(hex.length < 2) {
+				hex = '0' + hex;
+			}
+			strHex += hex;
+		}
+		if(strHex.length !== 7) {
+			strHex = that;
+		}
+		return strHex;
+	} else if(reg.test(that)) {
+		var aNum = that.replace(/#/, "").split("");
+		if(aNum.length === 6) {
+			return that;
+		} else if(aNum.length === 3) {
+			var numHex = "#";
+			for(var i = 0; i < aNum.length; i += 1) {
+				numHex += (aNum[i] + aNum[i]);
+			}
+			return numHex;
+		}
+	}
+	return that;
 };
-/**
- * RGB 转 HSL.公式参考自 http://en.wikipedia.org/wiki/HSL_color_space.
- * r, g, 和 b 需要在 [0, 255] 范围内; h, s, 和 l 在 [0, 1] 之间
- * r       红色色值
- * g       绿色色值
- * b       蓝色色值
- * @return  Array           HSL各值数组
+/*RGB 转 HSL.公式参考http://en.wikipedia.org/wiki/HSL_color_space.
+ * r, g, b 在 [0, 255] ; h, s, l 在 [0, 1] 之间
  */
 function rgbToHsl(r, g, b) {
-    r /= 255, g /= 255, b /= 255;
-    var max = Math.max(r, g, b), min = Math.min(r, g, b);
-    var h, s, l = (max + min) / 2;
+	r /= 255, g /= 255, b /= 255;
+	var max = Math.max(r, g, b),
+		min = Math.min(r, g, b);
+	var h, s, l = (max + min) / 2;
 
-    if (max == min){ 
-        h = s = 0; // achromatic
-    } else {
-        var d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch(max) {
-            case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-            case g: h = (b - r) / d + 2; break;
-            case b: h = (r - g) / d + 4; break;
-        }
-        h /= 6;
-    }
+	if(max == min) {
+		h = s = 0; // achromatic
+	} else {
+		var d = max - min;
+		s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+		switch(max) {
+			case r:
+				h = (g - b) / d + (g < b ? 6 : 0);
+				break;
+			case g:
+				h = (b - r) / d + 2;
+				break;
+			case b:
+				h = (r - g) / d + 4;
+				break;
+		}
+		h /= 6;
+	}
 
-    return [h, s, l];
+	return [h, s, l];
 }
-
+//rbg转shv
 function rgbToHsv(r, g, b) {
-    r = r / 255;
-    g = g / 255;
-    b = b / 255;
-    var h, s, v;
-    var min = Math.min(r, g, b);
-    var max = v = Math.max(r, g, b);
-    var l = (min + max) / 2;
-    var difference = max - min;
+	r = r / 255;
+	g = g / 255;
+	b = b / 255;
+	var h, s, v;
+	var min = Math.min(r, g, b);
+	var max = v = Math.max(r, g, b);
+	var l = (min + max) / 2;
+	var difference = max - min;
 
-    if (max == min) {
-        h = 0;
-    } else {
-        switch (max) {
-        case r:
-            h = (g - b) / difference + (g < b ? 6 : 0);
-            break;
-        case g:
-            h = 2.0 + (b - r) / difference;
-            break;
-        case b:
-            h = 4.0 + (r - g) / difference;
-            break;
-        }
-        h = Math.round(h * 60);
-    }
-    if (max == 0) {
-        s = 0;
-    } else {
-        s = 1 - min / max;
-    }
-    s = Math.round(s * 100);
-    v = Math.round(v * 100);
-    return [h, s, v];
+	if(max == min) {
+		h = 0;
+	} else {
+		switch(max) {
+			case r:
+				h = (g - b) / difference + (g < b ? 6 : 0);
+				break;
+			case g:
+				h = 2.0 + (b - r) / difference;
+				break;
+			case b:
+				h = 4.0 + (r - g) / difference;
+				break;
+		}
+		h = Math.round(h * 60);
+	}
+	if(max == 0) {
+		s = 0;
+	} else {
+		s = 1 - min / max;
+	}
+	s = Math.round(s * 100);
+	v = Math.round(v * 100);
+	return [h, s, v];
 }
-rgbToHsv(255,155,5)
 
+describe('hsb2rgb', function() {
+	it('should correctly convert arbitraty HSB colors to RGB', function() {
+		assert.deepEqual(hsb2rgb(220, .43, .3), [44, 55, 77]);
+	});
 
-let p0 = getDivPosition($('.windP')[0])
-let pm = getDivMPosition($('.windP')[0])
-let c0 = getDivPosition($('.windC')[0])
-let cm = getDivMPosition($('.windC')[0])
-let a0 = getDivPosition($('.windA')[0])
-let am = getDivMPosition($('.windA')[0])
-let color = {
-	h: 0,
-	s: 100,
-	b: 100
-} //当前色相
-let nowColor = {
-	h: 0,
-	s: 100,
-	b: 100,
-	a: 1
-} //所选颜色
-let cbw = pm.x - p0.x //colorBoxWith 色块长度
-let cbh = pm.y - p0.y //colorBoxHeight 色块高度
-changeC();
-console.log(p0)
+	it('should correctly convert grey-scale colors', function() {
+		assert.deepEqual(hsb2rgb(0, 0, 0), [0, 0, 0]);
+		assert.deepEqual(hsb2rgb(0, 0, .2), [51, 51, 51]);
+		assert.deepEqual(hsb2rgb(0, 0, 1), [255, 255, 255]);
+
+		assert.deepEqual(hsb2rgb(54, 0, 0), [0, 0, 0]);
+		assert.deepEqual(hsb2rgb(54, 0, .2), [51, 51, 51]);
+		assert.deepEqual(hsb2rgb(54, 0, 1), [255, 255, 255]);
+	});
+
+	it('should round RGB channel values', function() {
+		assert.deepEqual(hsb2rgb(220, .43, .3), [44, 55, 77]);
+		assert.deepEqual(hsb2rgb(0, 0, .5), [128, 128, 128]);
+	});
+
+	it('should return RGB values in the range of 0-255', function() {
+		assert.equal(hsb2rgb(0, 0, 1.5)[0], 255);
+		assert.equal(hsb2rgb(0, 0, -1.5)[0], 0);
+		assert.deepEqual(hsb2rgb(220, .43, 1.5), hsb2rgb(220, .43, 1));
+		assert.deepEqual(hsb2rgb(220, .43, -1.5), hsb2rgb(220, .43, 0));
+		assert.deepEqual(hsb2rgb(220, .43, .3), hsb2rgb(220 + 360, .43, .3));
+	});
+
+	it('should allow percentage as the units', function() {
+		assert.deepEqual(hsb2rgb(220, '43%', '30%'), [44, 55, 77]);
+	});
+
+	it('should allow degree units', function() {
+		assert.deepEqual(hsb2rgb('220deg', .43, .3), [44, 55, 77]);
+		assert.deepEqual(hsb2rgb('220°', .43, .3), [44, 55, 77]);
+	});
+});
