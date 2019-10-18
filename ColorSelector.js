@@ -1,3 +1,23 @@
+let p0 = getDivPosition($('.windP')[0])
+let pm = getDivMPosition($('.windP')[0])
+let c0 = getDivPosition($('.windC')[0])
+let cm = getDivMPosition($('.windC')[0])
+let a0 = getDivPosition($('.windA')[0])
+let am = getDivMPosition($('.windA')[0])
+let color = {
+	h: 0,
+	s: 100,
+	b: 100
+} //当前色相
+let nowColor = {
+	h: 0,
+	s: 100,
+	b: 100,
+	a: 1
+} //所选颜色
+let cbw = pm.x - p0.x //colorBoxWith 色块长度
+let cbh = pm.y - p0.y //colorBoxHeight 色块高度
+
 function getDivPosition(div) {
 	var x = Math.ceil(div.getBoundingClientRect().left);
 	var y = Math.ceil(div.getBoundingClientRect().top);
@@ -17,31 +37,31 @@ function getDivMPosition(div) {
 }
 //颜色选择
 function mousePosition(ev) {
-	x = event.clientX + 1 //不知什么原因有1px的误差
-	y = event.clientY + 1 //不知什么原因有1px的误差
+	x =event.clientX==undefined? event.changedTouches[0].clientX:event.clientX + 1 //不知什么原因有1px的误差
+	y =event.clientY==undefined? event.changedTouches[0].clientY:event.clientY + 1 //不知什么原因有1px的误差
 	let px = {
 		x: x - p0.x,
 		y: y - p0.y
 	} //px相对坐标
-	if(event.button == 0) {
+//	if(event.button == 0) {
 		$('.zzm').css({
-			"top": px.y + "px",
-			"left": px.x + "px"
+			"top": px.y-2 + "px",
+			"left": px.x-2 + "px"
 		})
 		nowColor.s = px.x == 0 ? 0 : px.x == cbw ? 100 : Math.ceil(px.x / cbw * 100)
 		nowColor.b = px.y == 0 ? 100 : px.y == cbh ? 0 : Math.ceil((cbh - px.y) / cbh * 100)
 
 		changeNowC();
 		document.onmousemove = mouseMove; // 注册鼠标移动事件处理函数
-		document.ontouchmove = mouseMove
+		document.ontouchmove = mouseMove;
 		document.onmouseup = mouseStop;
-	}
+//	}
 
 };
 
 function mouseMove(ev) {
-	x = event.clientX + 1 //不知什么原因有1px的误差
-	y = event.clientY + 1 //不知什么原因有1px的误差
+	x =event.clientX==undefined? event.changedTouches[0].clientX:event.clientX + 1 //不知什么原因有1px的误差
+	y =event.clientY==undefined? event.changedTouches[0].clientY:event.clientY + 1 //不知什么原因有1px的误差
 	px = {
 		x: x < p0.x ? 0 : x > pm.x ? cbw : x - p0.x,
 		y: y < p0.y ? 0 : y > pm.y ? cbh : y - p0.y
@@ -51,14 +71,14 @@ function mouseMove(ev) {
 
 	changeNowC();
 	$('.zzm').css({
-		"top": px.y + "px",
-		"left": px.x + "px"
+		"top": px.y-2 + "px",
+		"left": px.x-2 + "px"
 	})
 
 }
 
 function mouseStop(ev) {
-	o = document.onmousemove = document.onmouseup = null;
+	o = document.onmousemove = document.onmouseup = document.ontouchmove = null;
 }
 //色相选择
 function selectColor(ev) {
@@ -128,7 +148,7 @@ function changeC() {
 	changeNowC();
 }
 //改变透明度色相
-function aChangeA(rgba){
+function aChangeA(rgba) {
 	$('.wAbox').css("background", `linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgb(${rgba.r},${rgba.g},${rgba.b}) 100%)`)
 }
 //改变所选值
@@ -166,7 +186,7 @@ function hsb2rgb(hue, saturation, value, A) {
 	value = Math.max(0, Math.min(value, 1));
 
 	var rgb;
-	if(saturation === 0&&value===1) {
+	if(saturation === 0 && value === 1) {
 		return {
 			r: 255,
 			g: 255,
