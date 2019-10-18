@@ -3,7 +3,7 @@
 
 ![版本 0.3](https://img.shields.io/badge/版本-0.3-red.svg)  
 
-[预览图](https://reedbf.github.io/ColorSelector.js/img/cs.png)
+<img src="https://reedbf.github.io/ColorSelector.js/img/cs.png" alt="Build Status"></a>
 #### 一个基于jq的**颜色选择器**，后续会同步至vue...
 ### [demo](https://reedbf.github.io/ColorSelector.js/)
 
