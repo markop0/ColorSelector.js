@@ -33,6 +33,7 @@ function mousePosition(ev) {
 
 		changeNowC();
 		document.onmousemove = mouseMove; // 注册鼠标移动事件处理函数
+		document.ontouchmove = mouseMove
 		document.onmouseup = mouseStop;
 	}
 
