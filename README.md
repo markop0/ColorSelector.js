@@ -2,8 +2,8 @@
 # ColorSelector.js
 
 ![版本 0.3](https://img.shields.io/badge/版本-0.3-red.svg)  
-一个基于jq的**颜色选择器**，后续会同步至vue...
-## [demo](https://reedbf.github.io/ColorSelector.js/)
+#### 一个基于jq的**颜色选择器**，后续会同步至vue...
+### [demo](https://reedbf.github.io/ColorSelector.js/)
 
 ## 参考
 * 色值转换公式
