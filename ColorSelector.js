@@ -17,7 +17,7 @@ let nowColor = {
 } //所选颜色
 let cbw = pm.x - p0.x //colorBoxWith 色块长度
 let cbh = pm.y - p0.y //colorBoxHeight 色块高度
-
+//获取可拖动区间左上点坐标(x)0
 function getDivPosition(div) {
 	var x = Math.ceil(div.getBoundingClientRect().left);
 	var y = Math.ceil(div.getBoundingClientRect().top);
@@ -26,7 +26,7 @@ function getDivPosition(div) {
 		y: y
 	};
 }
-
+//获取可拖动区间右下点坐标(x)m
 function getDivMPosition(div) {
 	let x = Math.ceil(div.getBoundingClientRect().right);
 	let y = Math.ceil(div.getBoundingClientRect().bottom);
@@ -58,7 +58,7 @@ function mousePosition(ev) {
 //	}
 
 };
-
+//颜色拖动选择
 function mouseMove(ev) {
 	x =event.clientX==undefined? event.changedTouches[0].clientX:event.clientX + 1 //不知什么原因有1px的误差
 	y =event.clientY==undefined? event.changedTouches[0].clientY:event.clientY + 1 //不知什么原因有1px的误差
@@ -76,7 +76,7 @@ function mouseMove(ev) {
 	})
 
 }
-
+//取消拖动事件
 function mouseStop(ev) {
 	o = document.onmousemove = document.onmouseup = document.ontouchmove = null;
 }
@@ -335,40 +335,3 @@ function rgbToHsv(r, g, b) {
 	return [h, s, v];
 }
 
-//describe('hsb2rgb', function() {
-//	it('should correctly convert arbitraty HSB colors to RGB', function() {
-//		assert.deepEqual(hsb2rgb(220, .43, .3), [44, 55, 77]);
-//	});
-//
-//	it('should correctly convert grey-scale colors', function() {
-//		assert.deepEqual(hsb2rgb(0, 0, 0), [0, 0, 0]);
-//		assert.deepEqual(hsb2rgb(0, 0, .2), [51, 51, 51]);
-//		assert.deepEqual(hsb2rgb(0, 0, 1), [255, 255, 255]);
-//
-//		assert.deepEqual(hsb2rgb(54, 0, 0), [0, 0, 0]);
-//		assert.deepEqual(hsb2rgb(54, 0, .2), [51, 51, 51]);
-//		assert.deepEqual(hsb2rgb(54, 0, 1), [255, 255, 255]);
-//	});
-//
-//	it('should round RGB channel values', function() {
-//		assert.deepEqual(hsb2rgb(220, .43, .3), [44, 55, 77]);
-//		assert.deepEqual(hsb2rgb(0, 0, .5), [128, 128, 128]);
-//	});
-//
-//	it('should return RGB values in the range of 0-255', function() {
-//		assert.equal(hsb2rgb(0, 0, 1.5)[0], 255);
-//		assert.equal(hsb2rgb(0, 0, -1.5)[0], 0);
-//		assert.deepEqual(hsb2rgb(220, .43, 1.5), hsb2rgb(220, .43, 1));
-//		assert.deepEqual(hsb2rgb(220, .43, -1.5), hsb2rgb(220, .43, 0));
-//		assert.deepEqual(hsb2rgb(220, .43, .3), hsb2rgb(220 + 360, .43, .3));
-//	});
-//
-//	it('should allow percentage as the units', function() {
-//		assert.deepEqual(hsb2rgb(220, '43%', '30%'), [44, 55, 77]);
-//	});
-//
-//	it('should allow degree units', function() {
-//		assert.deepEqual(hsb2rgb('220deg', .43, .3), [44, 55, 77]);
-//		assert.deepEqual(hsb2rgb('220°', .43, .3), [44, 55, 77]);
-//	});
-//});
