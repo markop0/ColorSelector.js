@@ -15,7 +15,7 @@ let nowColor = {
 	b: 100,
 	a: 1
 } //所选颜色
-let cbw = pm.x - p0.x //colorBoxWith 色块长度
+let cbw = pm.x - p0.x //colorBoxWidth 色块长度
 let cbh = pm.y - p0.y //colorBoxHeight 色块高度
 //获取可拖动区间左上点坐标(x)0
 function getDivPosition(div) {
